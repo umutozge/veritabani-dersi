@@ -1,11 +1,11 @@
 # Summary
 
 * [Giriş](README.md)
-* [SQL server kurulumu ve yapılandırılması](sql-server-kurulumu-ve-yapilandirilmasi.md)
-* Veritabanı ve veritabanı dosyalarının yönetimi
-* SQL server güvenliği ve rol yönetimi
-* SQL server ileri yönetim araçları
-* Yönetimsel görevlerin otomatikleştirilmesi
-* SQL replication
-* SQL server ile yüksek erişebilirlik
+* [Kurulumu ve yapılandırma](chapters/kurulum-ve-yapilandirma.md)
+* [Veritabanı ve dosya yönetimi](chapters/veritabani-ve-dosya-yonetimi.md)
+* [Güvenlik ve rol yönetimi](chapters/guvenlik-ve-rol-yonetimi.md)
+* [İleri yönetim araçları](chapters/ileri-yonetim-araclari.md)
+* [Otomatikleştirme](chapters/otomatiklestirme.md)
+* [Replication](chapters/replication.md)
+* [Yüksek erişilebilirlik](chapters/yuksek-erisilebilirlik.md)
 
