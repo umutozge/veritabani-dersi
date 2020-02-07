@@ -314,7 +314,7 @@ AFTER aile_kimlik_no;
 Dilersek tek tek sütunların özelliklerini inceleyebiliriz. Bunun için:
 
 ```bash
-SHOW COLUMNS FROM birds_new LIKE 'endangered' \G
+SHOW COLUMNS FROM kuşlar_yeni LIKE 'nesli_tehlikede' \G
 ```
 
 `ENUM` veri tipinde, veriyi belirlemek için 1'den başlayarak numaralandırma kullanabiliriz. Örneğin tüm kuşların nesli tehlikede statüsünü 'Düşük Risk - Yakın Tehlikede' yapmak için:
@@ -363,18 +363,22 @@ SELECT * FROM koloni.korunma_statüsü;
 ALTER TABLE kuşlar_yeni
 CHANGE COLUMN nesli_tehlikede korunma_statüsü_kimlik_no INT DEFAULT 8;
 ```
+```mysql
+ALTER TABLE kuşlar_yeni
+CHANGE COLUMN nesli_tehlikede korunma_statüsü_kimlik_no INT DEFAULT 8;
+```
 
 Şimdi sadece varsayılan değeri değiştiren bir komut girelim:
 
  
-```bash
+```mysql
 ALTER TABLE kuşlar_yeni
 ALTER korunma_statüsü_kimlik_no SET DEFAULT 7;
 ```
 Sütunun değişiklikten sonraki halini görelim:
 
-```bash
-SHOW COLUMNS FROM birds_new LIKE 'conservation_status_id' \G
+```mysql
+SHOW COLUMNS FROM kuşlar_yeni LIKE 'korunma_statüsü_kimlik_no' \G
 ```
 Varsayılan değeri dilerseniz aşağıdaki komutla silebilirsiniz; bu komut girilmiş verileri hiçbir şekilde etkilemeyecektir:
 
