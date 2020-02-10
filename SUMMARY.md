@@ -1,6 +1,6 @@
 # Summary
 
-* [Giriş ve Kurulum](chapters/giriş-ve-kurulum.md)
+* [Giriş ve Kurulum](chapters/giris-ve-kurulum.md)
 * [Veritabanı Yapılandırma](chapters/yapilandirma.md)
 * [Veri Yönetimi](chapters/veri-yönetimi.md)
 * [Güvenlik ve rol yönetimi](chapters/guvenlik-ve-rol-yonetimi.md)
