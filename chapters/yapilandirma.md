@@ -13,12 +13,12 @@ Veritabanının yapısına **şema** denmektedir.
 Şimdi kuşlarla ilgili bir veritabanı yaratıp bunu yapılandıracağız. Önce veritabanını oluşturalım:
 
 ```sql
-CREATE DATABASE koloni
+CREATE DATABASE moloni
 CHARACTER SET latin5 
-COLLATE latin5_general_ci;
+COLLATE latin5_turkish_ci;
 ```
 
-Bu komutla veritabanına bir ad verdik, kullanılacak karakter kümesini tanımladık ve verilerimizin `utf8` karakter kodlamasında ve dijital şekilde (0 ve 1) tutulmasını istediğimizi belirttik.
+Bu komutla veritabanına bir ad verdik, kullanılacak karakter kümesini tanımladık.
 
 Aşağıdaki komutları girerek, ilkiyle veritabanımızın oluşup oluşmadığını kontrol edip, ikincisiyle de varsayılan veritabanı olarak atayarak, her komutta adını yazmaktan kurtulalım.
 
@@ -30,13 +30,13 @@ USE koloni
 
 ## Tabloların  oluşturulması
 
-Bu veritabanında bir adet ana tablomuz ve birkaç tane referans tablomuz olacak. Normalde tablolar 255 sütuna kadar büyütülebilirler; fakat büyük tablolar performans ve yapı açısından tercih edilmemelidir: veritabanını yapılandırırken mümkün olduğu kadar küçük tablolar halinde yapılandırmaya dikkat etmeliyiz.
+Bu veritabanında bir adet ana tablomuz ve birkaç tane referans tablomuz olacak. Normalde tablolar 255 sütuna kadar büyütülebilirler; fakat büyük tablolar performans ve yapı açısından tercih edilmeMElidir: veritabanını yapılandırırken mümkün olduğu kadar küçük tablolar halinde yapılandırmaya dikkat etmeliyiz.
 
 Ana tablomuzu oluşturalım:
 
 ```sql
 CREATE TABLE kuşlar
-(kimllik_no INT AUTO_INCREMENT PRIMARY KEY,
+(kimlik_no INT AUTO_INCREMENT PRIMARY KEY,
 bilimsel_ad VARCHAR(255) UNIQUE,
 genel_ad VARCHAR(50),
 aile_kimlik_no INT,
@@ -167,7 +167,7 @@ sınıf_resmi BLOB);
 	* `kanat_biçimi` adında maksimum 25 karakter uzunluğunda `CHAR` tipinde bir alanı;
 	* `kanat_örneği` adında `BLOB` değerli bir alanı olsun.
 1. `SHOW CREATE TABLE kuş_kanat_biçimleri` komutunu çalıştırın, hem `;` ile bitirerek, hem de `\G` 'le bitirerek deneyin. Hangisinin çıktısı yeni bir tablo tanımlamakta daha kullanışlı görünüyorsa, bunu bir metin editörüne kopyalayıp yapıştırın. `DROP TABLE kuş_kanat_biçimleri;` yaparak tablonuzu silin. Editöre kopyaladığınız metinde `ENGINE`i MyISAM olacak şekilde değiştirin. Değişen metni istemciye kopyalayarak çalıştırın ve tablonuzu tekrar oluşturun.
-1.  `kuş_vücut_biçimleri` ve `kuş_gaga_biçimleri` adlı iki tablo daha oluşturun. İlk tablodaki alanlar `vücut_kimlik_no` (`CHAR(3)`, `UNIQUE`),  `vücut_biçimi` (`CHAR(25)` ve `vücut_örneği` (`BLOB`) olsun. İkinci tabloyu da benzer biçimde oluşturun. İki tabloda da varsayılan depolama motorunu (`ENGINE`) `MyISAM` olarak belirleyin. 
+1.  `kuş_vücut_biçimleri` ve `kuş_gaga_biçimleri` adlı iki tablo daha oluşturun. İlk tablodaki alanlar `vücut_kimlik_no` (`CHAR(3)`, `UNIQUE`),  `vücut_biçimi` (`CHAR(25)`) ve `vücut_örneği` (`BLOB`) olsun. İkinci tabloyu da benzer biçimde oluşturun. İki tabloda da varsayılan depolama motorunu (`ENGINE`) `MyISAM` olarak belirleyin. 
 
 ## Tabloların yeniden yapılandırılması 
 
@@ -184,7 +184,7 @@ mkdir ~/tmp/sql
 Şimdi `koloni` veritabanı altındaki `kuşlar` tablosunu bu dizine yedekleyelim:
 
 
-```sql
+```bash
 mysqldump --user='umut' -p koloni kuşlar > ~/tmp/sql/kuşlar.sql 
 ```
 
@@ -277,8 +277,9 @@ Tablomuzdaki kuşlardan dördünü "nesli tehlikede değil" olarak işaretleyeli
 
 
 ```sql
-UPDATE kuşlar_yeni SET nesli_tehlikede = 0
-WHERE kuş_kimlik_no IN(1,2,4,5);
+UPDATE kuşlar_yeni
+SET nesli_tehlikede = 0
+WHERE kimlik_no IN(1,2,4,5);
 ```
 
 Nesli tehlikede olan kuşları raporlayalım:
@@ -292,11 +293,21 @@ WHERE nesli_tehlikede \G
 `BIT` tipi verilerde, eğer değeri 0 mı diye kontrol etmek için `NOT` ifadesini kullanabiliriz:
 
 ```sql
-SELECT kuş_kimlik_no, bilimsel_ad, genel_ad
+SELECT kimlik_no, bilimsel_ad, genel_ad
 FROM kuşlar_yeni
 WHERE NOT nesli_tehlikede \G
 ```
-Nesli tehlikede olma durumu iki değerden daha ayrıntılı bir şekilde ifade edilebilir. Şimdi `nesli_tehlikede` sütununu birden fazla değer alabilecek şekilde değiştirip  `aile_kimlik_no` sütununun ardına taşıyalım:  
+
+
+Nesli tehlikede olma durumu iki değerden daha ayrıntılı bir şekilde ifade edilebilir. Bit veri tipinden daha geniş yer kaplayan bir veri tipine geçmekte problem yaşanabileceğinden önce veri tipini geçici olarak `CHAR(255)` olarak değiştirelim:
+
+
+```sql
+ALTER TABLE kuşlar_yeni modify column nesli_tehlikede CHAR(255);
+```
+
+
+Şimdi `nesli_tehlikede` sütununu birden fazla değer alabilecek şekilde değiştirip  `aile_kimlik_no` sütununun ardına taşıyalım:  
 
 
 ```sql
@@ -361,10 +372,6 @@ SELECT * FROM koloni.korunma_statüsü;
 
 Şimdi `kuşlar_yeni` tablosuna dönelim ve orada `nesli_tehlikede` alanının hem adını değiştirelim hem de varsayılan değerini 'Düşük Risk, Önemsiz' kategorisine bağlayalım:
 
-```sql
-ALTER TABLE kuşlar_yeni
-CHANGE COLUMN nesli_tehlikede korunma_statüsü_kimlik_no INT DEFAULT 8;
-```
 ```sql
 ALTER TABLE kuşlar_yeni
 CHANGE COLUMN nesli_tehlikede korunma_statüsü_kimlik_no INT DEFAULT 8;
@@ -556,7 +563,7 @@ Bu çıktıdan yeni bir anahtar eklemiş olduğumuzu görüyoruz.
 
 ```sql
 SHOW INDEX FROM kuşgözlemcileri.insanlar
-WHERE Key_name = 'insan_adları \G
+WHERE Key_name = 'insan_adları' \G
 ```
 Şimdi tekrar `EXPLAIN` komutunu kullanarak değişikliği görelim:
 
@@ -573,7 +580,7 @@ Son olarak `korunma_statüsü` tablosundaki indeksi değiştirelim:
 ```sql
 ALTER TABLE korunma_statüsü 
 DROP PRIMARY KEY,
-CHANGE korunma_statüsü_kimlik_no korunma_statüsü_kimlik_no INT PRIMARY KEY AUTO_INCREMENT;
+CHANGE statü_kimlik_no korunma_statüsü_kimlik_no INT PRIMARY KEY AUTO_INCREMENT;
 ```
 
 **Alıştırmalar**
@@ -591,3 +598,4 @@ CHANGE korunma_statüsü_kimlik_no korunma_statüsü_kimlik_no INT PRIMARY KEY A
        ('Otluklar'), ('Göller, Nehirler, Birikintiler'),
        ('Sazlıklar, Bataklıklar'), ('Dağlar'), ('Okyanuslar'),
        ('Şehir');
+

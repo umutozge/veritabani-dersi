@@ -26,7 +26,7 @@ ps aux | grep mysql
 Eğer çıktıda `grep` komutu dışında da satırlar görüyorsanız sisteminizde `mysql` yüklü ve aktif demektir. Eğer görmüyorsanız, `mysql` kurulu olmayabilir ya da kuruludur fakat çalışmıyordur. Kurulumu test edelim 
 
 ```bash
-sudo mysqladmin -p version status`
+sudo mysqladmin -p version status
 ```
 
 Bu komutun ardından önce çalıştığınız makinedeki admin şifresini girmeniz istenecektir. Bu şifreyi girdikten sonra bir şifre daha sorluyorsa, bunu boş geçin; aşağıdaki gibi bir çıktı alıyorsanız, sisteminizde `mysql` yüklü demektir. 
@@ -51,7 +51,7 @@ Sistemde yazılımın yüklenmemiş olduğunu varsayalım. Yüklemek için
 
 ```bash
 sudo apt-get update
-sudo apt-get install mariadb-server mariadb-client
+sudo apt-get install mariadb-server mariadb-client mariadb-test
 ```
 
 Yüklemenin ardından bir takım basit ayarlar yapmamız gerekecek. Örneğin yönetici (root) şifresi belirlemek, anonim kullanıcı hesaplarını temizlemek, hata kayıtlarının tutulmasını sağlamak, varsayılan karakter kümesini belirlemek gibi. Sonuncudan başlayalım. Veritabanı sisteminin yapılandırma dosyasını açalım; bu dosya çoğu sistemde `/etc/mysql/my.conf`dosyasıdır. Bu tarz yapılandırma dosyalarının her zaman ham metin editörlerinde açılıp değiştirilmesi gerekir; hiçbir zaman sistem dosyalarını Word gibi kelime işemcilerde açmamalıyız. Kullanabileceğiniz en basit ham metin editörlerinden biri `nano` programıdır.
@@ -76,7 +76,7 @@ log-error=/var/log/mysqld.log
 İlk kurulum sırasında yönetici şifresi boş olarak belirlenir. Şimdi onu değiştirelim, 
 
 ```bash
-[~]$ sudo mysqladmin -u root -p flush-privileges password
+sudo mysqladmin -u root -p flush-privileges password
 ```
 
 İlk çıkan `Enter password:` istemini boş geçeceğiz, bu eski şifre; ardından gelen `New password:` ve `Confirm new password:` istemlerine yeni şifremizi iki kere girelim. Normal kullanımda bu şifrenin son derece güçlü olması gerekir.
@@ -84,7 +84,7 @@ log-error=/var/log/mysqld.log
 `MySQL` sisteminde kullanıcılar evsahibi sistemleri (host) ile birlikte tanımlanırlar. Yukarıdaki işlemle biz `localhost` isimli hosttaki `root` kullanıcısı için şifre tanımladık. Sistemde başka `root` kullanıcılar da olabilir. Güvenlik gereği bunların silinmesi iyi bir pratiktir. Önce sistemde hangi kullanıcı-host çiftleri var ona bakalım:
 
 ```bash
-sudo mysql -u root -p -e "SELCT user,host FROM mysql.user;"
+sudo mysql -u root -p -e "SELECT user,host FROM mysql.user;"
 ```
 
 Eğer bu komut karşılığında `root`, `localhost` çifti dışında bir kullanıcı görüyorsanız, o kullanıcıyı aşağıdaki komutla silebilirsiniz: 
@@ -146,7 +146,7 @@ mysql -u umut -p
 
 yapalım. Daha önceki komutlarda girdiğimiz ve çalıştığımız makinanın yöneticisine ait yetkileri kullanmamızı sağlayan `sudo` komutunu artık kullanmamız gerekmiyor. Şifre istemine kullanıcı şifremizi girelim; aşağıdaki gibi bir ekrana ulaşacağız. 
 
-```bash
+```sql
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MariaDB connection id is 64
 Server version: 10.3.18-MariaDB-0+deb10u1 Debian 10
@@ -163,7 +163,7 @@ MariaDB [(none)]>
 Önce sunucuda hangi veri tabanlarının bulunduğuna bir bakalım, `mysql` içindeyken, 
 
 
-```bash
+```sql
 SHOW DATABASES;
 ```
 
@@ -307,7 +307,7 @@ Durumu `1` olan kayıtları arattığımızda artık bir yerine iki kayıt göre
 
 Şimdi daha karmaşık bir güncelleme yapalım. `100` kimlikli kitabın adını yanlış yazmışız, `a` basacağımız yere `s` yazmışız. Aynı anda hem bu kitabın adını düzeltelim hem de durumunu yine `0`'a çevirelim. Bu tarz karmaşık komutları satırlara bölmek okunabilirlik açısından yararlıdır. İstemci içinde dilediğiniz kadar satırbaşı yapabilirsiniz, `mysql` bir `;` ya da `\G` ile karşılaşana kadar komutun henüz tamalanmadığını düşünecektir. Şimdi komutumuzu aşağıdaki şekilde gireceğiz:
 
-```bash
+```sql
 UPDATE kitap
 SET başlık = 'Kara Kitap', durum = 0
 WHERE kimlik = 100;
@@ -323,7 +323,7 @@ Tabloyu tekrar görüntüleyerek her şeyin istediğiniz gibi olduğundan emin o
 Şimdi durum için verdiğimiz rakamların (0 ve 1) adlarını içeren ikinci bir tablo oluşturalım: 
 
 
-```bash
+```sql
 CREATE TABLE durum_adları (durum INT, durum_adı CHAR(8));
 INSERT INTO durum_adları VALUES (0, 'tükendi'), (1, 'stokta');
 ```
@@ -342,7 +342,3 @@ MariaDB [test]> SELECT kimlik, başlık, durum_adı
 |    102 | Yaban      | tükendi    |
 +--------+------------+------------+
 ```
-
-## Servisleri yapılandırma
-
-## SQL sunucu mimarisi
