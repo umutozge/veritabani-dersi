@@ -17,7 +17,7 @@ Belli başlı yazılım parçalarına kısaca bir bakalım, ayrıntılara daha s
 # MySQL yazılımlarının yüklenmesi 
 
 
-Önce sistemde sistemde `mysql` ile ilgili herhangi bir  artalan sürecinin çalışıp çalışmadığını kontrol edelim:
+Önce sistemde `mysql` ile ilgili herhangi bir  artalan sürecinin çalışıp çalışmadığını kontrol edelim:
 
 ```bash
 ps aux | grep mysql
@@ -60,9 +60,10 @@ Yüklemenin ardından bir takım basit ayarlar yapmamız gerekecek. Örneğin y�
 sudo nano /etc/mysql/my.cnf
 ```
 
-ile kurulum dosyasını açalım. Bu dosyada bölümler köşeli parantez içindeki başlıklarla ayrılmıştır. Örneğin hem istemci hem sunucu için geçerli olmasını istediğimiz ayarları `[client-server]` başlığı altına girelim,
+ile kurulum dosyasını açalım. Bu dosyada bölümler köşeli parantez içindeki başlıklarla ayrılmıştır. Hem istemci hem sunucu için geçerli olmasını istediğimiz ayarları `[client-server]` başlığı altına, sadece istemci için geçerli olmasını istediklerimizi `[client]` altına girmemiz gerekir. İstemci için varsayılan karakter kümesini belirlemek için aşağıdaki satırı girelim, eğer `[client]` başlığı yoksa bunu da oluşturalım:
 
 ```
+[client]
 default-character-set=utf8
 ```
 
@@ -133,6 +134,7 @@ Derste karşılaşacağımız alıştırmaları yapabilmek için, yarattığım�
 ```bash
 sudo mysql -u root -p -e "GRANT ALL ON *.* TO 'umut'@'localhost';"
 ``` 
+
 ## MySQL istemci temelleri
 
 Bu derste hem ileri seviye fonksiyonlar için en iyi temeli sağlayan, hem de hangi sistemde olursa olsun her `MySQL` kurulumuyla birlikte gelen metin tabanlı `mysql` aracını kullanacağız. Şimdi bu aracın temel işlevlerini görelim. 
