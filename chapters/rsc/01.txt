@@ -1,0 +1,1 @@
+INSERT INTO kuşlar (bilimsel_ad, genel_ad) VALUES ('Charadrius vociferus', 'Yağmur Kuşu'), ('Gavia immer', 'Büyük Kuzey Dalgıç Kuşu'), ('Aix sponsa', 'Ağaç Ördeği'), ('Chordeiles minor', 'Çobanaldatan'), ('Sitta carolinensis', 'Beyaz Göğüslü Sıvacı Kuşu'), ('Apteryx mantelli', 'Kuzay Adalı Kahverengi Kivi Kuşu');
